@@ -24,7 +24,6 @@ void MemberListController::init()
     {
         std::cout << error.what() << std::endl;
     }
-
 }
 
 void MemberListController::updateView()
@@ -49,6 +48,7 @@ void MemberListController::editMember()
 
     AddEditMemberDialog *dialog = new AddEditMemberDialog(mModel);
     dialog->exec();
+    updateView();
 }
 
 void MemberListController::deleteMember()
@@ -92,5 +92,3 @@ void MemberListController::deselected()
         mView->activateButtons(true);
     }
 }
-
-

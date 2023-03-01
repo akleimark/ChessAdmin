@@ -41,7 +41,6 @@ bool MemberModel::checkName(const QString &name) const
             }
         }
     }
-
     return true;
 }
 
@@ -65,7 +64,6 @@ bool MemberModel::checkPhoneNumber(const QString &number) const
             return false;
         }
     }
-
     return true;
 }
 
@@ -89,7 +87,6 @@ bool MemberModel::checkNumber(const QString &number) const
             return false;
         }
     }
-
     return true;
 }
 
@@ -272,24 +269,69 @@ void MemberModel::save(const bool &createNew)
         {
             throw std::runtime_error(query.lastError().text().toStdString());
         }
-        if(emailAddress.length() != 0)
+        query.clear();
+        if(!query.exec("SELECT LAST_INSERT_ID();"))
         {
-            query.clear();
-            query.prepare("INSERT INTO member_email_data(member_id, email_address) values(?, ?)");
+            throw std::runtime_error("Databasfel");
+        }
+
+        if(!query.next())
+        {
+            throw std::runtime_error("Databasfel");
+        }
+        const unsigned int MEMBER_ID = query.value(0).toUInt();
+
+        // E-post
+        query.clear();
+        query.prepare("INSERT INTO member_email_data(member_id, email_address) values(?, ?)");
+        query.addBindValue(MEMBER_ID);
+        query.addBindValue(emailAddress);
+        if(!query.exec())
+        {
+            throw std::runtime_error(query.lastError().text().toStdString());
+        }
+
+        // Telefon
+        query.clear();
+        query.prepare("INSERT INTO member_phone_data(member_id, phone_number) values(?, ?)");
+        query.addBindValue(MEMBER_ID);
+        query.addBindValue(phoneNumber);
+        if(!query.exec())
+        {
+            throw std::runtime_error(query.lastError().text().toStdString());
+        }
+
+        // Boende
+        query.clear();
+        query.prepare("INSERT INTO member_living_data(member_id, street_adress, zip_code, city) values(?, ?, ?, ?)");
+        query.addBindValue(MEMBER_ID);
+        query.addBindValue(streetAddress);
+        query.addBindValue(zipCode);
+        query.addBindValue(city);
+        if(!query.exec())
+        {
+            throw std::runtime_error(query.lastError().text().toStdString());
         }
     }
     else
     {
         std::cout << "Update" << std::endl;
-        const QString SQL = "UPDATE members SET id=" + QString::number(id) + ", firstname='" + firstname + "',lastname='"
-                + lastname + "',birthdate='" + birthdate + "', biological_sex='" + biologicalSex + "' where id=" + QString::number(id);
+        std::vector<QString> sql;
 
-        std::cout << "SQL: " << SQL.toStdString() << std::endl;
 
-        QSqlQuery query;
-        if(!query.exec(SQL))
+        sql.push_back("UPDATE members SET id=" + QString::number(id) + ", firstname='" + firstname + "',lastname='"
+                + lastname + "',birthdate='" + birthdate + "', biological_sex='" + biologicalSex + "' where id=" + QString::number(id));
+        sql.push_back("UPDATE member_email_data SET email_address='" + emailAddress + "' where member_id=" + QString::number(id));
+        sql.push_back("UPDATE member_phone_data SET phone_number='" + phoneNumber + "' where member_id=" + QString::number(id));
+        sql.push_back("UPDATE member_living_data SET street_adress='" + streetAddress + "',zip_code=" + QString::number(zipCode) + ",city='" + city + "' where member_id=" + QString::number(id));
+
+        for(QString &sqlStatement : sql)
         {
-            throw std::runtime_error(query.lastError().text().toStdString());
+            QSqlQuery query;
+            if(!query.exec(sqlStatement))
+            {
+                throw std::runtime_error(query.lastError().text().toStdString());
+            }
         }
     }
 }
@@ -304,7 +346,6 @@ void MemberModel::remove()
         throw std::runtime_error(query.lastError().text().toStdString());
     }
 }
-
 
 bool MemberModel::operator==(const MemberModel &model) const
 {
@@ -353,12 +394,10 @@ MemberModel* MemberModel::find(MemberModel *model)
     return nullptr;
 }
 
-
 std::ostream& operator<<(std::ostream &os, const MemberModel &model)
 {
     os << "Id: " << model.getId() << std::endl
        << "Namn: " << model.getFullName().toStdString() << std::endl;
 
     return os;
-
 }
