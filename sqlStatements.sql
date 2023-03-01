@@ -37,7 +37,11 @@ CREATE  TABLE   member_email_data(
 
 # Foreign keys
 
+ALTER TABLE member_living_data ADD FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE ON UPDATE CASCADE
 
+ALTER TABLE member_phone_data ADD FOREIGN KEY(member_id) REFERENCES members(id) ON DELETE CASCADE ON UPDATE CASCADE
+
+ALTER TABLE member_email_data ADD FOREIGN KEY(member_id) REFERENCES members(id) ON DELETE CASCADE ON UPDATE CASCADE
 
 
 
