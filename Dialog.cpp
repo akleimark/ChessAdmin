@@ -10,7 +10,6 @@
 const unsigned int Dialog::DEFAULT_WIDTH = 500;
 const unsigned int Dialog::DEFAULT_HEIGHT = 500;
 
-
 Dialog::Dialog()
 {
     mainWidget = new QWidget;
@@ -187,4 +186,3 @@ void AddEditMemberDialog::addSavedData()
     phoneEdit->setText(memberModel.getPhoneNumber());
     emailEdit->setText(memberModel.getEmailAddress());
 }
-

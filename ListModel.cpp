@@ -10,9 +10,10 @@ void ListModel<MemberModel>::getAll()
 {
     container.clear();
     const QString SQL = "SELECT "
-                        "id, firstname, lastname, birthdate, biological_sex, street_adress, zip_code, city, phone_number, email_address "
+                        "id, firstname, lastname, birthdate, biological_sex, street_adress, zip_code, city, phone_number, email_address, status as payed_member_fee "
                         "FROM members LEFT JOIN member_living_data ON members.id = member_living_data.member_id LEFT JOIN member_phone_data "
-                        "ON members.id = member_phone_data.member_id LEFT JOIN member_email_data ON members.id = member_email_data.member_id";
+                        "ON members.id = member_phone_data.member_id LEFT JOIN member_email_data ON members.id = member_email_data.member_id "
+                        "LEFT JOIN member_fees ON members.id = member_fees.member_id";
     QSqlQuery query;
     query.exec(SQL);
 
@@ -29,8 +30,7 @@ void ListModel<MemberModel>::getAll()
         memberModel.setCity(query.value(7).toString());
         memberModel.setPhoneNumber(query.value(8).toString());
         memberModel.setEmailAddress(query.value(9).toString());
+        memberModel.setMemberFeeStatus(query.value(10).toBool());
         container.insert(memberModel);
     }
-
 }
-

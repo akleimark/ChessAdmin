@@ -9,7 +9,8 @@
 #include <QStackedWidget>
 #include <QAction>
 #include "ListModel.h"
-
+#include "MemberFeesView.h"
+#include "MemberFeesController.h"
 
 class MainWindow : public QMainWindow
 {
@@ -37,18 +38,22 @@ class MainWindow : public QMainWindow
         // QActions
         QAction *quitAction;
         QAction *memberListAction;
+        QAction *memberFeesAction;
 
         // Models
         ListModel<MemberModel> *memberListModel;
 
         // Views
         MemberListView *memberListView;
+        MemberFeesView *memberFeesView;
 
         // Controllers
         MemberListController *memberListController;
+        MemberFeesController *memberFeesController;
 
     private slots:
         void memberList();
+        void memberFees();
 
 };
 #endif // MAINWINDOW_H

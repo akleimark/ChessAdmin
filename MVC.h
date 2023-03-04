@@ -31,8 +31,8 @@ class View : public QWidget
         void setController(Controller *c) { controller = c; }
 
     protected:
-        const QString viewName;
         Model *model;
+        const QString viewName;
         Controller *controller;
         QVBoxLayout *layout;
 };

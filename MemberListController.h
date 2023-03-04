@@ -14,7 +14,6 @@ class MemberListController : public Controller
     private:
         int currentSelectedRow;
 
-
     public slots:
         void addMember();
         void editMember();

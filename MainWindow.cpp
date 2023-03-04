@@ -53,17 +53,21 @@ void MainWindow::addModels()
 void MainWindow::addViews()
 {
     memberListView = new MemberListView(memberListModel, this, "MEMBERLIST_VIEW");
+    memberFeesView = new MemberFeesView(memberListModel, this, "MEMBERFEES_VIEW");
     stackedWidget->addWidget(memberListView);
+    stackedWidget->addWidget(memberFeesView);
 
 }
 void MainWindow::addControllers()
 {
     memberListController = new MemberListController(memberListModel, memberListView);
+    memberFeesController = new MemberFeesController(memberListModel, memberFeesView);
 }
 
 void MainWindow::initMVC()
 {
      memberListView->addListeners();
+     memberFeesView->addListeners();
 }
 
 void MainWindow::addActions()
@@ -73,6 +77,10 @@ void MainWindow::addActions()
 
     memberListAction = new QAction(tr("&Medlemslista"), this);
     connect(memberListAction, &QAction::triggered, this, &MainWindow::memberList);
+
+    memberFeesAction = new QAction(tr("&Medlemsavgifter"), this);
+    connect(memberFeesAction, &QAction::triggered, this, &MainWindow::memberFees);
+
 }
 void MainWindow::addMenuSystem()
 {
@@ -81,13 +89,14 @@ void MainWindow::addMenuSystem()
 
     QMenu *memberMenu = menuBar()->addMenu(tr("&Medlemskap"));
     memberMenu->addAction(memberListAction);
+    memberMenu->addAction(memberFeesAction);
+
 }
 
 void MainWindow::showView(View *view) const
 {
     stackedWidget->setCurrentWidget(view);
 }
-
 
 void MainWindow::memberList()
 {
@@ -96,4 +105,10 @@ void MainWindow::memberList()
     memberListController->getView()->render();
 }
 
+void MainWindow::memberFees()
+{
+    memberFeesController->init();
+    showView(memberFeesView);
+    memberFeesController->getView()->render();
+}
 

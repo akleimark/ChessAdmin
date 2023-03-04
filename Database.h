@@ -20,7 +20,6 @@ class Database
         const static QString DATABASE_USERNAME;
         const static QString DATABASE_PASSWORD;
         const static QString SQL_FILE_PATH;
-
 };
 
 class DatabaseInterface
@@ -30,7 +29,6 @@ class DatabaseInterface
         virtual ~DatabaseInterface() {}        
         virtual void save(const bool &createNew) = 0;
         virtual void remove() = 0;       
-
 };
 
 #endif // DATABASE_H

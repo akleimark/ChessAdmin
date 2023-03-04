@@ -36,5 +36,4 @@ T ListModel<T>::atIndex(const unsigned int &index) const
     throw std::out_of_range("Felaktigt index.");
 }
 
-
 #endif // LISTMODEL_H

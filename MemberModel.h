@@ -34,7 +34,9 @@ class MemberModel : public Model, public DatabaseInterface, public Validate
         QString getPhoneNumber() const { return phoneNumber; }
         void setPhoneNumber(const QString &number);
         QString getEmailAddress() const { return emailAddress; }
-        void setEmailAddress(const QString &address);        
+        void setEmailAddress(const QString &address);
+        bool isMemberFeePayed() const { return payedMemberFee; }
+        void setMemberFeeStatus(const bool &status) { payedMemberFee = status; }
         virtual void save(const bool &createNew);
         virtual void remove();
         static MemberModel* find(MemberModel *model);
@@ -43,7 +45,6 @@ class MemberModel : public Model, public DatabaseInterface, public Validate
         bool operator==(const MemberModel &model) const;
         bool operator<(const MemberModel &model) const;        
         virtual void validate() const;
-
 
     private:
         unsigned int id;
@@ -56,12 +57,14 @@ class MemberModel : public Model, public DatabaseInterface, public Validate
         QString city;
         QString phoneNumber;
         QString emailAddress;
+        bool payedMemberFee;
+
+
         static std::set<MemberModel*> container;
         bool checkName(const QString &name) const;
         bool checkNumber(const QString &number) const;
         bool checkPhoneNumber(const QString &number) const;
         bool checkEmailAddress(const QString &address) const;
-
 };
 
 std::ostream& operator<<(std::ostream &os, const MemberModel &model);

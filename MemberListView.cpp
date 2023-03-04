@@ -33,6 +33,7 @@ void MemberListView::render()
     ListModel<MemberModel> *listModel = static_cast<ListModel<MemberModel> *>(model);
     std::set<MemberModel>::const_iterator citerator;
 
+    table->setRowCount(0);
     unsigned int row = 0;
     for(citerator = listModel->cbegin(); citerator != listModel->cend(); ++citerator)
     {
@@ -90,6 +91,4 @@ void MemberListView::addSouth()
     gridLayout->addWidget(removeMemberButton, 0, 2);
 
     layout->addWidget(buttonWidget);
-
-
 }

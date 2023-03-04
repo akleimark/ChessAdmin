@@ -8,7 +8,6 @@
 #include <QRadioButton>
 #include "MemberModel.h"
 
-
 class Dialog : public QDialog
 {
     Q_OBJECT
@@ -26,7 +25,6 @@ class Dialog : public QDialog
     private:
         const static unsigned int DEFAULT_WIDTH;
         const static unsigned int DEFAULT_HEIGHT;
-
 };
 
 class AddEditMemberDialog : public Dialog
@@ -58,8 +56,6 @@ class AddEditMemberDialog : public Dialog
 
     private slots:
         void saveMember();
-
 };
-
 
 #endif // DIALOG_H

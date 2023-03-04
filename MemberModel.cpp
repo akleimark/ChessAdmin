@@ -20,6 +20,7 @@ MemberModel::MemberModel():
     city = "";
     phoneNumber = "";
     emailAddress = "";
+    payedMemberFee = false;
 }
 
 MemberModel::~MemberModel()
@@ -312,18 +313,36 @@ void MemberModel::save(const bool &createNew)
         {
             throw std::runtime_error(query.lastError().text().toStdString());
         }
+
+        // Medlemsavift
+        query.clear();
+        query.prepare("INSERT INTO member_fees(member_id, status) values(?, ?)");
+        query.addBindValue(MEMBER_ID);
+        query.addBindValue(payedMemberFee);
+        if(!query.exec())
+        {
+            throw std::runtime_error(query.lastError().text().toStdString());
+        }
     }
     else
     {
         std::cout << "Update" << std::endl;
         std::vector<QString> sql;
 
-
         sql.push_back("UPDATE members SET id=" + QString::number(id) + ", firstname='" + firstname + "',lastname='"
                 + lastname + "',birthdate='" + birthdate + "', biological_sex='" + biologicalSex + "' where id=" + QString::number(id));
         sql.push_back("UPDATE member_email_data SET email_address='" + emailAddress + "' where member_id=" + QString::number(id));
         sql.push_back("UPDATE member_phone_data SET phone_number='" + phoneNumber + "' where member_id=" + QString::number(id));
         sql.push_back("UPDATE member_living_data SET street_adress='" + streetAddress + "',zip_code=" + QString::number(zipCode) + ",city='" + city + "' where member_id=" + QString::number(id));
+        if(payedMemberFee)
+        {
+            sql.push_back("UPDATE member_fees SET status=1 where member_id=" + QString::number(id));
+        }
+        else
+        {
+            sql.push_back("UPDATE member_fees SET status=0 where member_id=" + QString::number(id));
+        }
+
 
         for(QString &sqlStatement : sql)
         {
@@ -338,7 +357,7 @@ void MemberModel::save(const bool &createNew)
 
 void MemberModel::remove()
 {
-    const QString SQL = "DELETE from members where id=" + QString::number(id);
+    const QString SQL = "DELETE from members where id=" + QString::number(id);    
 
     QSqlQuery query;
     if(!query.exec(SQL))
@@ -376,8 +395,6 @@ bool MemberModel::operator<(const MemberModel &model) const
 
     return id < model.id;
 }
-
-
 
 MemberModel* MemberModel::find(MemberModel *model)
 {

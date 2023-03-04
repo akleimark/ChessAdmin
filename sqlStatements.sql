@@ -6,6 +6,8 @@ DROP TABLE member_phone_data
 
 DROP TABLE member_living_data
 
+DROP TABLE member_fees
+
 DROP TABLE members
 
 # Creation
@@ -34,6 +36,10 @@ CREATE  TABLE   member_email_data(
     ,   email_address   VARCHAR(1024)   NOT NULL
 )Engine=innoDB
 
+CREATE  TABLE   member_fees(
+        member_id       INTEGER        PRIMARY KEY
+    ,   status          INT            NOT NULL DEFAULT 0
+)Engine=innoDB
 
 # Foreign keys
 
@@ -43,5 +49,5 @@ ALTER TABLE member_phone_data ADD FOREIGN KEY(member_id) REFERENCES members(id) 
 
 ALTER TABLE member_email_data ADD FOREIGN KEY(member_id) REFERENCES members(id) ON DELETE CASCADE ON UPDATE CASCADE
 
-
+ALTER TABLE member_fees ADD FOREIGN KEY(member_id) REFERENCES members(id) ON DELETE CASCADE ON UPDATE CASCADE
 

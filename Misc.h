@@ -10,6 +10,4 @@ class Validate
 
 };
 
-
-
 #endif // MISC_H
