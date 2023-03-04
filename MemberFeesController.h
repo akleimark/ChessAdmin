@@ -1,9 +1,10 @@
 #ifndef MEMBERFEESCONTROLLER_H
 #define MEMBERFEESCONTROLLER_H
 
-
+#include "TableController.h"
 #include "MVC.h"
-class MemberFeesController : public Controller
+
+class MemberFeesController : public TableController
 {
     Q_OBJECT
     public:
@@ -11,12 +12,10 @@ class MemberFeesController : public Controller
         virtual void init();
         virtual void updateView();
 
-    private:
-        int currentSelectedRow;
+    private:        
 
     public slots:
-        void rowChanged(const int &row, const int &);
-        void deselected();
+        virtual void changeSelection();
         void toggle();
         void exportToPdf();
 

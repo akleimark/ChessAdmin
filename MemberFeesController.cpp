@@ -9,9 +9,10 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QTextDocument>
+#include "Defs.h"
 
 MemberFeesController::MemberFeesController(Model *pModel, View *pView):
-    Controller(pModel, pView), currentSelectedRow(-1)
+    TableController(pModel, pView)
 {
 
 }
@@ -22,7 +23,6 @@ void MemberFeesController::init()
     {
         ListModel<MemberModel> *listModel = static_cast<ListModel<MemberModel> *>(model);
         listModel->getAll();
-
     }
     catch(std::runtime_error &error)
     {
@@ -45,17 +45,19 @@ void MemberFeesController::updateView()
     }
 }
 
-void MemberFeesController::rowChanged(const int &row, const int &)
+void MemberFeesController::changeSelection()
 {
-    currentSelectedRow = row;
-}
-
-void MemberFeesController::deselected()
-{
+    selectedRows.clear();
     MemberFeesView *mView = static_cast<MemberFeesView*>(view);
-    if(mView->isDeselected())
+
+    QList<QTableWidgetItem*> list = mView->getTable()->selectedItems();
+    for(QTableWidgetItem *item : list)
     {
-        currentSelectedRow = -1;
+        selectedRows.insert((item->row()));
+    }
+
+    if(this->selectedRows.size() == 0)
+    {        
         mView->activateButtons(false);
     }
     else
@@ -67,7 +69,9 @@ void MemberFeesController::deselected()
 void MemberFeesController::toggle()
 {
     ListModel<MemberModel> *listModel = static_cast<ListModel<MemberModel> *>(model);
-    MemberModel mModel = listModel->atIndex(currentSelectedRow);
+
+    unsigned int row = *selectedRows.begin();
+    MemberModel mModel = listModel->atIndex(row);
 
     if(mModel.isMemberFeePayed())
     {
@@ -108,7 +112,10 @@ void MemberFeesController::exportToPdf()
         }
     }
 
-    html += "</tbody></body></html>";
+    html += "</tbody></table>";
+    html += "<br /><hr>";
+    html += "<footer><p><i>©" + DEVELOPER_NAME + "</i></p></footer>";
+    html += "</body></html>";
 
     doc.setHtml(html);
     doc.print(&printer);

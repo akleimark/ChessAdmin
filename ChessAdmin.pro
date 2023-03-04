@@ -11,6 +11,8 @@ CONFIG += c++17
 SOURCES += \
     MemberFeesController.cpp \
     MemberFeesView.cpp \
+    TableController.cpp \
+    TableView.cpp \
     main.cpp \
     MainWindow.cpp \
     MVC.cpp \
@@ -24,6 +26,7 @@ SOURCES += \
 
 
 HEADERS += \
+    Defs.h \
     MainWindow.h \
     MVC.h \
     MemberFeesController.h \
@@ -35,7 +38,9 @@ HEADERS += \
     Table.h \
     MemberListController.h \
     Dialog.h \
-    ListModel.h
+    ListModel.h \
+    TableController.h \
+    TableView.h
 
 
 

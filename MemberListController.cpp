@@ -6,8 +6,9 @@
 #include "MemberListView.h"
 #include <QMessageBox>
 
+
 MemberListController::MemberListController(Model *pModel, View *pView):
-    Controller(pModel, pView), currentSelectedRow(-1)
+    TableController(pModel, pView)
 {
 
 }
@@ -44,7 +45,8 @@ void MemberListController::addMember()
 void MemberListController::editMember()
 {
     ListModel<MemberModel> *listModel = static_cast<ListModel<MemberModel> *>(model);
-    MemberModel mModel = listModel->atIndex(currentSelectedRow);
+    unsigned int row = *selectedRows.begin();
+    MemberModel mModel = listModel->atIndex(row);
 
     AddEditMemberDialog *dialog = new AddEditMemberDialog(mModel);
     dialog->exec();
@@ -53,42 +55,55 @@ void MemberListController::editMember()
 
 void MemberListController::deleteMember()
 {
-    std::cout << "delete" << std::endl;    
+    ListModel<MemberModel> *listModel = static_cast<ListModel<MemberModel> *>(model);
+    std::cout << "delete" << std::endl;
 
-    QMessageBox box(QMessageBox::Warning, "Radering av en medlem", "Vill du ta bort medlemmen ur databasen?", QMessageBox::Yes|QMessageBox::No);
-    int ret = box.exec();
-    if(ret == QMessageBox::Yes)
+    for(const unsigned int &index : selectedRows)
     {
-        ListModel<MemberModel> *listModel = static_cast<ListModel<MemberModel> *>(model);
-        MemberModel mModel = listModel->atIndex(currentSelectedRow);
-        try
+        MemberModel mModel = listModel->atIndex(index);
+        QMessageBox box(QMessageBox::Warning, "Radering av en medlem", "Vill du ta bort '" + mModel.getFullName() +"' ur databasen?", QMessageBox::Yes|QMessageBox::No);
+        int ret = box.exec();
+        if(ret == QMessageBox::Yes)
         {
-            mModel.remove();
-            updateView();
-        }
-        catch(std::runtime_error &error)
-        {
-            QMessageBox box(QMessageBox::Warning, "Databasfel", QString::fromStdString(error.what()));
-            box.exec();
+            try
+            {
+                mModel.remove();
+            }
+            catch(std::runtime_error &error)
+            {
+                QMessageBox box(QMessageBox::Warning, "Databasfel", QString::fromStdString(error.what()));
+                box.exec();
+            }
         }
     }
+    updateView();
 }
 
-void MemberListController::rowChanged(const int &row, const int &)
+void MemberListController::changeSelection()
 {
-    currentSelectedRow = row;
-}
-
-void MemberListController::deselected()
-{
+    selectedRows.clear();
     MemberListView *mView = static_cast<MemberListView*>(view);
-    if(mView->isDeselected())
+
+    QList<QTableWidgetItem*> list = mView->getTable()->selectedItems();
+    for(QTableWidgetItem *item : list)
     {
-        currentSelectedRow = -1;
-        mView->activateButtons(false);
+        selectedRows.insert((item->row()));
     }
+
+    if(selectedRows.size() == 0)
+    {      
+        mView->activateButton("EDIT_MEMBER_BUTTON", false);
+        mView->activateButton("REMOVE_MEMBER_BUTTON", false);
+    }
+    else if(selectedRows.size() == 1)
+    {
+        mView->activateButton("EDIT_MEMBER_BUTTON");
+        mView->activateButton("REMOVE_MEMBER_BUTTON");
+    }
+
     else
     {
-        mView->activateButtons(true);
+        mView->activateButton("EDIT_MEMBER_BUTTON", false);
+        mView->activateButton("REMOVE_MEMBER_BUTTON");
     }
 }

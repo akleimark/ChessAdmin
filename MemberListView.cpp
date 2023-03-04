@@ -9,22 +9,16 @@
 #include <iostream>
 
 MemberListView::MemberListView(Model *p_model, QWidget *parent, const QString &vName):
-    View(p_model, parent, vName)
+    TableView(p_model, parent, vName, "Medlemslista")
+{        
+    addCenter();
+    addSouth();
+}
+
+void MemberListView::addCenter()
 {
-    label = new QLabel("Medlemslista");
-    QFont font("Georgia", 16, QFont::Bold);
-    layout->addWidget(label);
-    label->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-    label->setFont(font);
-
-    QStringList headers;
-    headers << "Name" << "Date" << "Undso";
-
     table = new Table(QStringList({"Förnamn", "Efteramn", "Födelsedag", "Biologiskt kön", "Gatuadress", "Postnummer", "Postadress", "Telefonnummer", "E-postadress"}));
     layout->addWidget(table);
-
-    addSouth();
-
 }
 
 void MemberListView::render()
@@ -68,11 +62,10 @@ void MemberListView::render()
 void MemberListView::addListeners()
 {
     MemberListController *mController = dynamic_cast<MemberListController*>(controller);
-    connect(addMemberButton, &QPushButton::clicked, mController, &MemberListController::addMember);
-    connect(editMemberButton, &QPushButton::clicked, mController, &MemberListController::editMember);
-    connect(removeMemberButton, &QPushButton::clicked, mController, &MemberListController::deleteMember);
-    connect(table, &QTableWidget::cellClicked, mController, &MemberListController::rowChanged);
-    connect(table, &QTableWidget::itemSelectionChanged, mController, &MemberListController::deselected);
+    connect(buttonMap["ADD_MEMBER_BUTTON"], &QPushButton::clicked, mController, &MemberListController::addMember);
+    connect(buttonMap["EDIT_MEMBER_BUTTON"], &QPushButton::clicked, mController, &MemberListController::editMember);
+    connect(buttonMap["REMOVE_MEMBER_BUTTON"], &QPushButton::clicked, mController, &MemberListController::deleteMember);
+    connect(table, &QTableWidget::itemSelectionChanged, mController, &MemberListController::changeSelection);
 }
 
 void MemberListView::addSouth()
@@ -80,9 +73,9 @@ void MemberListView::addSouth()
     buttonWidget = new QWidget;
     QGridLayout *gridLayout = new QGridLayout;
     buttonWidget->setLayout(gridLayout);
-    addMemberButton = new QPushButton("Lägg till");
-    editMemberButton = new QPushButton("Redigera");
-    removeMemberButton = new QPushButton("Ta bort");
+    QPushButton *addMemberButton = new QPushButton("Lägg till");
+    QPushButton *editMemberButton = new QPushButton("Redigera");
+    QPushButton *removeMemberButton = new QPushButton("Ta bort");
     editMemberButton->setEnabled(false);
     removeMemberButton->setEnabled(false);
 
@@ -91,4 +84,8 @@ void MemberListView::addSouth()
     gridLayout->addWidget(removeMemberButton, 0, 2);
 
     layout->addWidget(buttonWidget);
+    buttonMap["ADD_MEMBER_BUTTON"] = addMemberButton;
+    buttonMap["EDIT_MEMBER_BUTTON"] = editMemberButton;
+    buttonMap["REMOVE_MEMBER_BUTTON"] = removeMemberButton;
 }
+

@@ -1,28 +1,21 @@
 #ifndef MEMBERFEESVIEW_H
 #define MEMBERFEESVIEW_H
 
-#include "Table.h"
-#include <QLabel>
-#include "MVC.h"
-#include <QPushButton>
+#include "TableView.h"
 
-class MemberFeesView : public View
+class MemberFeesView : public TableView
 {
     private:
-        Table *table;
-        QLabel *label;
-        QWidget *buttonWidget;
-        QPushButton *toggleButton;
-        QPushButton *exportButton;
+
 
     public:
         MemberFeesView(Model *p_model, QWidget *parent, const QString &vName);
         virtual ~MemberFeesView();
         virtual void render();
         virtual void addListeners();
-        void addSouth();
-        bool isDeselected() const { return table->selectedItems().size() == 0; }
-        void activateButtons(bool status) { toggleButton->setEnabled(status); }
+        virtual void addCenter();
+        virtual void addSouth();
+        void activateButtons(bool status) { buttonMap["TOGGLE_BUTTON"]->setEnabled(status); }
         Table* getTableWidget() const { return table; }
 
 };

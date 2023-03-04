@@ -1,25 +1,26 @@
 #ifndef MEMBERLISTCONTROLLER_H
 #define MEMBERLISTCONTROLLER_H
 
+#include <QSet>
+#include "TableController.h"
 
-#include "MVC.h"
-class MemberListController : public Controller
+
+class MemberListController : public TableController
 {
     Q_OBJECT
     public:
         MemberListController(Model *pModel, View *pView);
+        virtual ~MemberListController() {}
         virtual void init();
         virtual void updateView();
 
     private:
-        int currentSelectedRow;
 
     public slots:
         void addMember();
         void editMember();
-        void deleteMember();
-        void rowChanged(const int &row, const int &);
-        void deselected();
+        void deleteMember();        
+        virtual void changeSelection();
 };
 
 #endif // MEMBERLISTCONTROLLER_H
