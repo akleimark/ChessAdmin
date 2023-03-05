@@ -11,6 +11,8 @@
 #include "ListModel.h"
 #include "MemberFeesView.h"
 #include "MemberFeesController.h"
+#include "SettingsView.h"
+#include "SettingsController.h"
 
 class MainWindow : public QMainWindow
 {
@@ -39,6 +41,7 @@ class MainWindow : public QMainWindow
         QAction *quitAction;
         QAction *memberListAction;
         QAction *memberFeesAction;
+        QAction *settingsAction;
 
         // Models
         ListModel<MemberModel> *memberListModel;
@@ -46,14 +49,17 @@ class MainWindow : public QMainWindow
         // Views
         MemberListView *memberListView;
         MemberFeesView *memberFeesView;
+        SettingsView *settingsView;
 
         // Controllers
         MemberListController *memberListController;
         MemberFeesController *memberFeesController;
+        SettingsController *settingsController;
 
     private slots:
         void memberList();
         void memberFees();
+        void settings();
 
 };
 #endif // MAINWINDOW_H

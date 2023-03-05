@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
         exit(-1);
     }
 
-    //database->createTables();
+    database->createTables();
 
     stackedWidget = new QStackedWidget;
 
@@ -52,22 +52,29 @@ void MainWindow::addModels()
 
 void MainWindow::addViews()
 {
+    // Vyerna skapas.
     memberListView = new MemberListView(memberListModel, this, "MEMBERLIST_VIEW");
     memberFeesView = new MemberFeesView(memberListModel, this, "MEMBERFEES_VIEW");
+    settingsView = new SettingsView(this, "SETTINGS_VIEW");
+
+    // Nu läggs vyerna in i 'stackedWidget'.
     stackedWidget->addWidget(memberListView);
     stackedWidget->addWidget(memberFeesView);
+    stackedWidget->addWidget(settingsView);
 
 }
 void MainWindow::addControllers()
 {
     memberListController = new MemberListController(memberListModel, memberListView);
     memberFeesController = new MemberFeesController(memberListModel, memberFeesView);
+    settingsController = new SettingsController(settingsView);
 }
 
 void MainWindow::initMVC()
 {
      memberListView->addListeners();
      memberFeesView->addListeners();
+     settingsView->addListeners();
 }
 
 void MainWindow::addActions()
@@ -81,6 +88,9 @@ void MainWindow::addActions()
     memberFeesAction = new QAction(tr("&Medlemsavgifter"), this);
     connect(memberFeesAction, &QAction::triggered, this, &MainWindow::memberFees);
 
+    settingsAction = new QAction(tr("&Inställningar"), this);
+    connect(settingsAction, &QAction::triggered, this, &MainWindow::settings);
+
 }
 void MainWindow::addMenuSystem()
 {
@@ -91,6 +101,8 @@ void MainWindow::addMenuSystem()
     memberMenu->addAction(memberListAction);
     memberMenu->addAction(memberFeesAction);
 
+    QMenu *settingsMenu = menuBar()->addMenu(tr("&Inställningar"));
+    settingsMenu->addAction(settingsAction);
 }
 
 void MainWindow::showView(View *view) const
@@ -112,3 +124,9 @@ void MainWindow::memberFees()
     memberFeesController->getView()->render();
 }
 
+void MainWindow::settings()
+{
+    settingsController->init();
+    showView(settingsView);
+    settingsController->getView()->render();
+}

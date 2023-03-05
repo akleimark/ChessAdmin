@@ -7,15 +7,33 @@
 #include <iostream>
 #include <QMessageBox>
 
-const unsigned int Dialog::DEFAULT_WIDTH = 500;
-const unsigned int Dialog::DEFAULT_HEIGHT = 500;
+const unsigned int FormDialog::DEFAULT_WIDTH = 500;
+const unsigned int FormDialog::DEFAULT_HEIGHT = 500;
 
-Dialog::Dialog()
+FormDialog::FormDialog()
 {
     mainWidget = new QWidget;
     dialogLayout = new QVBoxLayout(this);
     this->resize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     this->setModal(true);
+}
+
+void FormDialog::addCenter()
+{
+    centerPanel = new QWidget;
+    leftPanel = new QWidget;
+    rightPanel = new QWidget;
+    centerLayout = new QHBoxLayout(centerPanel);
+    leftLayout = new QVBoxLayout(leftPanel);
+    rightLayout = new QVBoxLayout(rightPanel);
+    centerLayout->addWidget(leftPanel);
+    centerLayout->addWidget(rightPanel);
+}
+
+void FormDialog::addSouth()
+{
+    southPanel = new QWidget;
+    gridLayout = new QGridLayout(southPanel);
 }
 
 AddEditMemberDialog::AddEditMemberDialog(MemberModel &p_model):
@@ -42,14 +60,7 @@ AddEditMemberDialog:: ~AddEditMemberDialog()
 
 void AddEditMemberDialog::addCenter()
 {
-    QWidget * centerPanel = new QWidget;
-    QWidget *leftPanel = new QWidget;
-    QWidget *rightPanel = new QWidget;
-    QHBoxLayout *centerLayout = new QHBoxLayout(centerPanel);
-    QVBoxLayout *leftLayout = new QVBoxLayout(leftPanel);
-    QVBoxLayout *rightLayout = new QVBoxLayout(rightPanel);
-    centerLayout->addWidget(leftPanel);
-    centerLayout->addWidget(rightPanel);
+    FormDialog::addCenter();
 
     //Namn    
     leftLayout->addWidget(new QLabel("Namn: "));
@@ -110,8 +121,7 @@ void AddEditMemberDialog::addCenter()
 
 void AddEditMemberDialog::addSouth()
 {
-    QWidget *southPanel = new QWidget;
-    QGridLayout *gridLayout = new QGridLayout(southPanel);
+    FormDialog::addSouth();
 
     saveButton = new QPushButton("Spara");
     gridLayout->addWidget(saveButton, 0, 0);

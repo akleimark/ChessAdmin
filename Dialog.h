@@ -8,26 +8,34 @@
 #include <QRadioButton>
 #include "MemberModel.h"
 
-class Dialog : public QDialog
+class FormDialog : public QDialog
 {
     Q_OBJECT
 
     public:
-        Dialog();
-        virtual ~Dialog() {}
-        virtual void addCenter() = 0;
-        virtual void addSouth() = 0;
+        FormDialog();
+        virtual ~FormDialog() {}
+        virtual void addCenter();
+        virtual void addSouth();
 
     protected:        
         QWidget *mainWidget;
         QVBoxLayout *dialogLayout;
+        QWidget * centerPanel;
+        QWidget *leftPanel;
+        QWidget *rightPanel;
+        QHBoxLayout *centerLayout;
+        QVBoxLayout *leftLayout;
+        QVBoxLayout *rightLayout;
+        QWidget *southPanel;
+        QGridLayout *gridLayout;
 
     private:
         const static unsigned int DEFAULT_WIDTH;
         const static unsigned int DEFAULT_HEIGHT;
 };
 
-class AddEditMemberDialog : public Dialog
+class AddEditMemberDialog : public FormDialog
 {
     Q_OBJECT
 
