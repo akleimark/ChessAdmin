@@ -20,7 +20,9 @@ class MemberListController : public TableController
         void addMember();
         void editMember();
         void deleteMember();        
+        void createVSFPage();
         virtual void changeSelection();
+
 };
 
 #endif // MEMBERLISTCONTROLLER_H

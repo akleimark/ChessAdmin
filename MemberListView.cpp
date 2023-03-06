@@ -65,6 +65,7 @@ void MemberListView::addListeners()
     connect(buttonMap["ADD_MEMBER_BUTTON"], &QPushButton::clicked, mController, &MemberListController::addMember);
     connect(buttonMap["EDIT_MEMBER_BUTTON"], &QPushButton::clicked, mController, &MemberListController::editMember);
     connect(buttonMap["REMOVE_MEMBER_BUTTON"], &QPushButton::clicked, mController, &MemberListController::deleteMember);
+    connect(buttonMap["CREATE_VSF_BUTTON"], &QPushButton::clicked, mController, &MemberListController::createVSFPage);
     connect(table, &QTableWidget::itemSelectionChanged, mController, &MemberListController::changeSelection);
 }
 
@@ -76,16 +77,18 @@ void MemberListView::addSouth()
     QPushButton *addMemberButton = new QPushButton("Lägg till");
     QPushButton *editMemberButton = new QPushButton("Redigera");
     QPushButton *removeMemberButton = new QPushButton("Ta bort");
+    QPushButton *createMemberRegisterPageButton = new QPushButton("Skapa VSF-blankett");
     editMemberButton->setEnabled(false);
     removeMemberButton->setEnabled(false);
 
     gridLayout->addWidget(addMemberButton, 0, 0);
     gridLayout->addWidget(editMemberButton, 0, 1);
     gridLayout->addWidget(removeMemberButton, 0, 2);
+    gridLayout->addWidget(createMemberRegisterPageButton, 0, 3);
 
     layout->addWidget(buttonWidget);
     buttonMap["ADD_MEMBER_BUTTON"] = addMemberButton;
     buttonMap["EDIT_MEMBER_BUTTON"] = editMemberButton;
     buttonMap["REMOVE_MEMBER_BUTTON"] = removeMemberButton;
+    buttonMap["CREATE_VSF_BUTTON"] = createMemberRegisterPageButton;
 }
-

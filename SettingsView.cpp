@@ -1,5 +1,7 @@
 #include "SettingsView.h"
 #include <QLabel>
+#include "SettingsController.h"
+#include "SettingsModel.h"
 
 SettingsView::SettingsView(QWidget *parent, const QString &vName):
     View(nullptr, parent, vName)
@@ -11,8 +13,6 @@ SettingsView::SettingsView(QWidget *parent, const QString &vName):
     label->setFont(font);
 
     addCenter();
-    addSouth();
-
 }
 
 SettingsView:: ~SettingsView()
@@ -31,31 +31,24 @@ void SettingsView::addCenter()
     centerLayout->addWidget(leftPanel);
     centerLayout->addWidget(rightPanel);
 
+    leftLayout->addWidget(new QLabel("Klubbnamn: "));
+    clubNameEdit = new QLineEdit;
+    clubNameEdit->setMaximumWidth(200);
+    rightLayout->addWidget(clubNameEdit);
+
+    layout->addWidget(centerPanel);
     layout->addStretch(1);
 }
-
-void SettingsView::addSouth()
-{
-    QWidget *buttonWidget = new QWidget;
-    QGridLayout *gridLayout = new QGridLayout;
-    buttonWidget->setLayout(gridLayout);
-    saveButton = new QPushButton("Redigera");
-    resetButton = new QPushButton("Återställ");
-
-    gridLayout->addWidget(saveButton, 0, 0);
-    gridLayout->addWidget(resetButton, 0, 1);
-
-    layout->addWidget(buttonWidget);
-}
-
 
 
 void SettingsView::render()
 {
-
+    clubNameEdit->setText(SettingsModel::getSetting("clubname"));
 }
 
 void SettingsView::addListeners()
 {
+    SettingsController *sController = static_cast<SettingsController*>(controller);
+    connect(clubNameEdit, &QLineEdit::textEdited, sController, &SettingsController::setClubName);
 
 }

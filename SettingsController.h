@@ -14,7 +14,8 @@ class SettingsController : public Controller
 
     private:
 
-    public slots:
+    public slots:        
+        void setClubName(const QString &name);
 
 };
 

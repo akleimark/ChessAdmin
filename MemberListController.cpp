@@ -5,7 +5,9 @@
 #include "ListModel.h"
 #include "MemberListView.h"
 #include <QMessageBox>
-
+#include <QPrinter>
+#include <QTextDocument>
+#include "SettingsModel.h"
 
 MemberListController::MemberListController(Model *pModel, View *pView):
     TableController(pModel, pView)
@@ -106,4 +108,29 @@ void MemberListController::changeSelection()
         mView->activateButton("EDIT_MEMBER_BUTTON", false);
         mView->activateButton("REMOVE_MEMBER_BUTTON");
     }
+}
+
+void MemberListController::createVSFPage()
+{
+    time_t theTime = time(NULL);
+    struct tm *aTime = localtime(&theTime);
+
+
+    //ListModel<MemberModel> *listModel = static_cast<ListModel<MemberModel> *>(model);
+    std::set<MemberModel>::const_iterator citerator;
+    QPrinter printer(QPrinter::PrinterResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setPageSize(QPageSize::A4);
+    printer.setOutputFileName("blankett.pdf");
+
+    QTextDocument doc;
+    QString html = "<html><head><link rel='stylesheet' type='text/css' href='styles.css' /></head><body><h1><center>Sammanställningsblankett"
+            "</center></h1>"
+            "<h2><center>Medlemsregistrering " + QString::number(aTime->tm_year + 1900) + "</center></h2>";
+
+    html += "<div style='float:left;margin-top:30px;'><strong>Klubb: </strong>" + SettingsModel::getSetting("clubname");
+
+
+    doc.setHtml(html);
+    doc.print(&printer);
 }

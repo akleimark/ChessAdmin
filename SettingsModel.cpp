@@ -29,7 +29,7 @@ void SettingsModel::saveSetting(const QString &key, const QString &value)
     // Inställningen finns ej sedan tidigare.
     if(SettingsModel::getSetting(key) == "")
     {
-        sql = "insert into settings values('" + key + "', setting_data='" + value + "'";
+        sql = "insert into settings values('" + key + "', '" + value + "')";
     }
     else
     {

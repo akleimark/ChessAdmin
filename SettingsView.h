@@ -3,14 +3,12 @@
 
 #include "MVC.h"
 #include <QPushButton>
+#include <QLineEdit>
 
 class SettingsView : public View
 {
     private:
-        void addCenter();
-        void addSouth();
-        QPushButton *saveButton;
-        QPushButton *resetButton;
+        void addCenter();           
 
         QWidget *mainWidget;
         QWidget * centerPanel;
@@ -19,6 +17,8 @@ class SettingsView : public View
         QHBoxLayout *centerLayout;
         QVBoxLayout *leftLayout;
         QVBoxLayout *rightLayout;
+
+        QLineEdit *clubNameEdit;
 
     public:
         SettingsView(QWidget *parent, const QString &vName);
